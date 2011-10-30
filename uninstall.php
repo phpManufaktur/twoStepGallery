@@ -35,6 +35,7 @@ require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_config.
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_gallery.php';
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_album.php';
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_picture.php';
+require_once(WB_PATH.'/modules/kit_tools/class.droplets.php');
 
 global $admin;
 
@@ -48,6 +49,16 @@ foreach ($tables as $table) {
         if (!$delete->sqlDeleteTable()) {
             $error .= sprintf('<p>[UNINSTALL] %s</p>', $delete->getError());
         }
+    }
+}
+
+// remove Droplets
+$dbDroplets = new dbDroplets();
+$droplets = array('ts_gallery');
+foreach ($droplets as $droplet) {
+    $where = array(dbDroplets::field_name => $droplet);
+    if (!$dbDroplets->sqlDeleteRecord($where)) {
+        $message = sprintf('[UPGRADE] Error uninstalling Droplet: %s', $dbDroplets->getError());
     }
 }
 

@@ -56,6 +56,7 @@ require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_config.
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_gallery.php';
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_album.php';
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tsg_picture.php';
+require_once(WB_PATH.'/modules/kit_tools/class.droplets.php');
 
 global $admin;
 
@@ -71,6 +72,21 @@ foreach ($tables as $table) {
         }
     }
 }
+
+// Install Droplets
+$droplets = new checkDroplets();
+$droplets->droplet_path = WB_PATH.'/modules/ts_gallery/droplets/';
+
+if ($droplets->insertDropletsIntoTable()) {
+    $message .= sprintf(tool_msg_install_droplets_success, 'tsGallery');
+}
+else {
+    $message .= sprintf(tool_msg_install_droplets_failed, 'tsGallery', $droplets->getError());
+}
+if ($message != "") {
+    echo '<script language="javascript">alert ("'.$message.'");</script>';
+}
+
 
 // Prompt Errors
 if (!empty($error)) {
