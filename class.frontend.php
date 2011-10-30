@@ -442,7 +442,6 @@ class tsgFrontend {
         global $dbTSGalbum;
         global $dbTSGpicture;
         global $dbTSGconfig;
-        
         if (empty($this->params[self::PARAM_NAME])) {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, TSG_ERROR_PARAM_NAME_MISSING));
             return false;

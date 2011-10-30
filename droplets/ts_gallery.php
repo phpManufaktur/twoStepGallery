@@ -17,7 +17,7 @@ if (file_exists(WB_PATH.'/modules/ts_gallery/class.frontend.php')) {
 	$params[tsgFrontend::PARAM_CSS] = (isset($css) && (strtolower($css) == 'false')) ? false : true;
 	$params[tsgFrontend::PARAM_NAME] = (isset($name)) ? $name : '';
 	if (!$gallery->setParams($params)) return $gallery->getError();
-	return $gallery->show();
+	return $gallery->action();
 }
 else {
 	return "tsGallery is not installed!";
