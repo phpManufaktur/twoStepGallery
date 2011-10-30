@@ -1,0 +1,116 @@
+{*
+ * tsGallery
+ *
+ * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @link http://phpmanufaktur.de
+ * @copyright 2011
+ * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id$
+ *
+ * Please consult the Dwoo Documentation & WIKI to get further informations 
+ * and hints for the usage of the Dwoo template engine.
+ *
+ * @link http://wiki.dwoo.org/
+ *
+ * Use {dump()} to get a list of all in this template available variables!
+ *}
+<div id="media_browser">
+  <form name="{$form.name}" enctype="multipart/form-data" action="{$form.link}" method="post">
+    <input type="hidden" name="{$form.action.name}" value="{$form.action.value}" />
+    <input type="hidden" name="{$directory.name}" value="{$directory.value}" />
+    <h2>{$form.title}</h2>
+    <div class="{if $form.is_message == 1}message{else}intro{/if}">{$form.intro}</div>
+    <div class="mb-media-path"><b>{$media.path.label}:</b> {$media.path.value}</div>
+    <table width="100%">
+      <colgroup>
+        <col width="20" /> 
+        <col width="{$media.settings.icon.width + 20}" /> 
+        <col width="*" />
+        <col width="150" /> 
+        <col width="100" /> 
+        <col width="150" />
+        <col width="35" />
+      </colgroup>
+      <tr>
+        <th class="mb-select">{$form.header.select}</th>
+        <th class="mb-icon">{$form.header.icon}</th>
+        <th class="mb-basename">{$form.header.name}</th>
+        <th class="mb-dimension">{$form.header.dimension}</th>
+        <th class="mb-file-size">{$form.header.size}</th>
+        <th class="mb-modified">{$form.header.date}</th>
+        <th class="mb-delete">{$form.header.delete}</th>
+      </tr>
+      {foreach $media.list item}
+      {if ($item.is_file == 1)}
+      <tr>
+        <td class="mb-select">
+          {if $media.settings.select == 1}
+          <input type="radio" name="{$item.link.select.name}" value="{$item.basename}" />
+          {elseif $media.settings.select == 2}
+          <input type="checkbox" name="{$item.link.select.name}[]" value="{$item.basename}" />
+          {/if}
+        </td>
+        <td class="mb-icon">
+          <a class="icon-link" href="{$item.link.select.url}">
+            <img class="icon-small" src="{$item.icon.url}" width="{$item.icon.width}" height="{$item.icon.height}" alt="{$item.basename}"/>
+            <span>
+              <img src="{$item.preview.url}" width="{$item.preview.width}" height="{$item.preview.height}" alt="{$item.basename}" />
+              <br />{$item.basename}            
+            </span>
+          </a>
+        </td>
+        <td class="mb-basename"><a href="{$item.link.select.url}" title="{$item.link.select.text}">{$item.basename}</a></td>
+        <td class="mb-dimension">{$item.width}x{$item.height}</td>
+        <td class="mb-file-size">{$item.size.formatted}</td>
+        <td class="mb-modified">{$item.modified.formatted}</td>
+        <td class="mb-delete"><a href="{$item.link.delete.url}" title="{$item.link.delete.text}"><img src="{$media.delete.url}" width="{$media.delete.width}" height="{$media.delete.height}" alt="{$item.link.delete.text}" /></a></td>
+      </tr>
+      {else}
+      <tr>
+        <td>&nbsp;</td>
+        <td class="mb-folder">
+          <a class="folder-link">
+            {if $item.is_parent == 0}
+            <a href="{$item.link.select.url}" title="{$item.link.select.text}"><img src="{$media.folder.url}" width="{$media.folder.width}" height="{$media.folder.height}" alt="{$item.basename}" /></a>
+            {else}
+            <a href="{$item.link.select.url}" title="{$item.link.select.text}"><img src="{$media.parent.url}" width="{$media.parent.width}" height="{$media.parent.height}" alt="{$item.basename}" /></a>
+            {/if}
+          </a>
+        </td>
+        <td class="mb-basename" colspan="4"><a href="{$item.link.select.url}" title="{$item.link.select.text}">{$item.basename}</a></td>
+        <td class="mb-delete">
+          {if $item.is_parent == 0}
+          <a href="{$item.link.delete.url}" title="{$item.link.delete.text}"><img src="{$media.delete.url}" width="{$media.delete.width}" height="{$media.delete.height}" alt="{$item.link.delete.text}" /></a>
+          {else}&nbsp;{/if}
+        </td>
+      </tr>
+      {/if}
+      {/foreach}
+      <tr><td colspan="7">&nbsp;</td></tr>
+      <tr>
+        <td colspan="7">
+          <table width="100%">
+            <colgroup>
+              <col width="*" />
+              <col width="150" />
+              <col width="250" />
+              <col width="50" />
+            </colgroup>
+            <tr>
+              <td>&nbsp;</td>
+              <td class="mb-upload">{$form.header.upload}</td>
+              <td class="mb-upload-input"><input size="25" type="file" name="{$upload.name}" /></td>            
+              <td><input class="mb_ok" type="submit" value="{$form.btn.ok}" /></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>                
+              <td class="mb-mkdir">{$form.header.mkdir}</td>
+              <td class="mb-mkdir-input"><input type="text" name="{$mkdir.name}" /></td>
+              <td><input class="mb_ok" type="submit" value="{$form.btn.ok}" /></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>

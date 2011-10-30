@@ -1,0 +1,23 @@
+<div id="tsg_container">
+  <div id="tsg_main_picture">
+    {$i=0}
+    {foreach $gallery.0.pictures picture}
+      <a class="lytebox" data-lyte-options="group:group_{$picture.album_id}" data-title="{$picture.main.title}" href="{$picture.main.url}">
+      {if $i == 0}{$i=$i+1}<img src="{$picture.main.url}" title />{/if}
+      </a>
+    {/foreach}
+  </div>
+  <div id="tsg_scroller">
+    {$x=0}
+    {foreach $gallery gall}{$i=0}
+      {if $x == 0}{$x=$x+1}
+      {else}
+        {foreach $gall.pictures picture}
+          <a class="lytebox" data-lyte-options="group:group_{$picture.album_id}" data-title="{$picture.main.title}" href="{$picture.main.url}">
+            {if $i == 0}{$i=$i+1}<img src="{$picture.preview.url}" title="{$picture.preview.title}" alt="{$picture.preview.title}" />{/if}
+          </a>
+        {/foreach}
+      {/if}
+    {/foreach}
+  </div>
+</div>

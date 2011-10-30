@@ -1,0 +1,48 @@
+/**
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @link http://phpmanufaktur.de
+ * @copyright 2011
+ * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id$
+ */
+
+@CHARSET "ISO-8859-1";
+
+img {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+a {
+  margin: 0;
+  padding: 0;
+}
+#tsg_container {
+  width: 915px;
+  height: 500px;
+  position: relative;
+}
+#tsg_main_picture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 800px;
+  height: 500px;
+  padding: 0;
+  margin: 0;
+}
+#tsg_scroller {
+  position: absolute;
+  top:0;
+  right: 0;
+  width: 113px;
+  height: 500px;
+  text-align: left;
+  color: orange;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}

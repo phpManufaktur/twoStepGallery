@@ -1,0 +1,38 @@
+{*
+ * tsGallery
+ *
+ * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @link http://phpmanufaktur.de
+ * @copyright 2011
+ * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id$
+ *
+ * Please consult the Dwoo Documentation & WIKI to get further informations 
+ * and hints for the usage of the Dwoo template engine.
+ *
+ * @link http://wiki.dwoo.org/
+ *
+ * Use {dump()} to get a list of all in this template available variables!
+ *}
+<div id="media_browser">
+  <form name="{$form.name}" action="{$form.link}" method="post">
+    <input type="hidden" name="{$form.action.name}" value="{$form.action.value}" />
+    <input type="hidden" name="{$item.name}" value="{$item.value}" />
+    <h2>{$form.title}</h2>
+    <div class="{if $form.is_message == 1}message{else}intro{/if}">{$form.intro}</div>
+    <table width="100%">
+      <colgroup>
+        <col width="200" /> 
+        <col width="*" />
+      </colgroup>
+      <tr><td colspan="2">&nbsp;</td></tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <input type="submit" value="{$form.btn.yes}" />&nbsp;
+          <input type="button" value="{$form.btn.no}" onclick="javascript: window.location = '{$form.abort.link}'; return false;" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>

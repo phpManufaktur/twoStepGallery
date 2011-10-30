@@ -1,0 +1,149 @@
+{*
+ * tsGallery
+ *
+ * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @link http://phpmanufaktur.de
+ * @copyright 2011
+ * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id$
+ *
+ * Please consult the Dwoo Documentation & WIKI to get further informations 
+ * and hints for the usage of the Dwoo template engine.
+ *
+ * @link http://wiki.dwoo.org/
+ *
+ * Use {dump()} to get a list of all in this template available variables!
+ *}
+<div id="media_browser">
+  <form name="{$form.name}" action="{$form.link}" method="post">
+    <input type="hidden" name="{$form.action.name}" value="{$form.action.value}" />
+    <input type="hidden" name="{$gallery.id.name}" value="{$gallery.id.value}" />
+    <h2>{$form.title}</h2>
+    <div class="{if $form.is_message == 1}message{else}intro{/if}">{$form.intro}</div>
+    <table width="100%">
+      <colgroup>
+        <col width="200" /> 
+        <col width="*" />
+        <col width="300" />
+      </colgroup>
+      {if $gallery.id.value > 0}
+      <tr>
+        <td>{$gallery.id.label}</td>
+        <td>{string_format($gallery.id.value, '%05d')}</td>
+        <td>{$gallery.id.hint}</td>
+      </tr>
+      {/if}
+      <tr>
+        <td>{$gallery.select.label}</td>
+        <td>
+          <select id="{$gallery.select.name}" name="{$gallery.select.name}" onchange="{$gallery.select.onchange}">
+            {foreach $gallery.select.options option}
+            <option value="{$option.value}"{if $option.selected == 1} selected="selected"{/if}>{$option.text}</option>
+            {/foreach}
+          </select>
+        </td>
+        <td>{$gallery.select.hint}</td>
+      </tr>
+      <tr>
+        <td>{$gallery.name.label}</td>
+        <td><input type="text" name="{$gallery.name.name}" value="{$gallery.name.value}" /></td>
+        <td>{$gallery.name.hint}</td>
+      </tr>
+      <tr>
+        <td>{$gallery.description.label}</td>
+        <td><textarea name="{$gallery.description.name}">{$gallery.description.value}</textarea></td>
+        <td>{$gallery.description.hint}</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="checkbox" name="{$gallery.delete.name}" value="{$gallery.delete.value}" /> {$gallery.delete.label}</td>
+        <td>{$gallery.delete.hint}</td>
+      </tr>
+      <tr><td colspan="3">&nbsp;</td></tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="2"><input type="submit" value="{$form.btn.ok}" /></td>
+      </tr>
+      {if $gallery.id.value > 0}
+      <tr><td colspan="3">&nbsp;</td></tr>
+      {* ALBUM LOOP *}
+      {foreach $albums.items album}
+      <tr>
+        <td>{$album.album.title.value}</td>
+        <td colspan="2">
+          <table width="100%">
+            <colgroup>
+              <col width="{$album.image.preview.width +30}" />
+              <col width="*" />
+            </colgroup>
+            <tr>
+              <td>
+                <img src="{$album.image.preview.url}" width="{$album.image.preview.width}" alt="{$album.album.title.value}" />
+                <p><a href="{$album.album.image.link.url}">{$album.album.image.link.text}</a></p>
+              </td>
+              <td>
+                <table width="100%">
+                  <colgroup>
+                    <col width="150" />
+                    <col width="*" />
+                  </colgroup>
+                  <tr>
+                    <td>{$album.album.title.label}</td>
+                    <td><input type="text" name="{$album.album.title.name}" value="{$album.album.title.value}" /></td>
+                  </tr>
+                  <tr>
+                    <td>{$album.album.description.label}</td>
+                    <td><textarea name="{$album.album.description.name}">{$album.album.description.value}</textarea></td>
+                  </tr>
+                  <tr>
+                    <td><p>{$album.album.image.title.label}</td>
+                    <td><input type="text" name="{$album.album.image.title.name}" value="{$album.album.image.title.value}" /></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="checkbox" name="{$album.album.delete.name}[]" value="{$album.album.delete.value}" /> {$album.album.delete.label}</td>
+                  </tr>
+                  <tr colspan="2"><td>&nbsp;</td></tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="submit" value="{$form.btn.ok}" /></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+          <div div class="picture_container">
+            {foreach $album.pictures.items picture}
+            <div class="picture_item">
+              <img src="{$picture.image.preview.url}" width="{$picture.image.icon.width * 2}" /><br />
+              <input type="text" name="{$picture.name}" value="{$picture.title}" />
+              <p><input type="checkbox" name="{$picture.delete.name}[]" value="{$picture.delete.value}" /> {$picture.delete.label}</p>
+            </div>
+            {/foreach}
+          </div>
+          <p style="clear:left;"><a href="{$album.pictures.add.url}">{$album.pictures.add.label}</a></p>
+          <p><input type="submit" value="{$form.btn.ok}" /></p>
+        </td>
+      </tr>
+      {/foreach}
+      {* /ALBUM LOOP *}
+      <tr><td colspan="3"><hr /></td></tr>
+      <tr>
+        <td>{$albums.create.label}</td>
+        <td><a href="{$albums.create.link.url}">{$albums.create.link.text}</a></td>
+        <td>{$albums.create.hint}</td>
+      </tr>
+      <tr><td colspan="3"><hr /></td></tr>
+      
+      {/if}
+      <tr><td colspan="3">&nbsp;</td></tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="2">
+          <input type="submit" value="{$form.btn.ok}" />&nbsp;
+          <input type="button" value="{$form.btn.abort}" onclick="javascript: window.location = '{$form.link}'; return false;" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
