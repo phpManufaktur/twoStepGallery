@@ -59,14 +59,22 @@ $PRECHECK['WB_ADDONS'] = array(
 
 global $database;
 $sql = "SELECT `value` FROM `" . TABLE_PREFIX . "settings` WHERE `name`='default_charset'";
-$result = $database->query($sql);
-if ($result) {
-  $data = $result->fetchRow(MYSQL_ASSOC);
-  $PRECHECK['CUSTOM_CHECKS'] = array(
-    'Default Charset' => array(
-      'REQUIRED' => 'utf-8',
-      'ACTUAL' => $data['value'],
-      'STATUS' => ($data['value'] === 'utf-8')
-    )
-  );
-}
+if (false === ($query = $database->query($sql)))
+  trigger_error($database->get_error(), E_USER_ERROR);
+$data = $query->fetchRow(MYSQL_ASSOC);
+
+// jQueryAdmin should be uninstalled
+$jqa = (file_exists(WB_PATH.'/modules/jqueryadmin/tool.php')) ? 'INSTALLED' : 'UNINSTALLED';
+
+$PRECHECK['CUSTOM_CHECKS'] = array(
+  'Default Charset' => array(
+    'REQUIRED' => 'utf-8',
+    'ACTUAL' => $data['value'],
+    'STATUS' => ($data['value'] === 'utf-8')
+    ),
+  'jQueryAdmin (replaced by LibraryAdmin)' => array(
+      'REQUIRED' => 'UNINSTALLED',
+      'ACTUAL' => $jqa,
+      'STATUS' => ($jqa === 'UNINSTALLED')
+      )
+);
