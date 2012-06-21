@@ -1,33 +1,33 @@
 <?php
 
 /**
- * tsGallery
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2011 - 2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
 
@@ -36,24 +36,24 @@ require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php';
 
 
 class tsgFrontend {
-    
+
     const PARAM_CSS					= 'css';
     const PARAM_PRESET				= 'preset';
     const PARAM_NAME                = 'name';
-    
+
     private $params = array(
             self::PARAM_CSS				=> true,
             self::PARAM_PRESET			=> 1,
             self::PARAM_NAME            => ''
     );
-    
+
     const GALLERY_TYPE_MAIN = 'main';
     const GALLERY_TYPE_PREVIEW = 'prev';
-    
+
     const OPTIMIZE_MODE_WIDTH = 1;
     const OPTIMIZE_MODE_HEIGHT = 2;
     const OPTIMIZE_MODE_BOTH = 4;
-    
+
     private $templatePath = '';
     private $tempPathMainImg = '';
     private $tempUrlMainImg = '';
@@ -64,18 +64,18 @@ class tsgFrontend {
     private $mainWidth = 0;
     private $mainHeight = 0;
     private $optimizeMode = self::OPTIMIZE_MODE_WIDTH;
-    
+
     public function __construct() {
         global $dbTSGconfig;
-        
+
         $this->setTemplatePath(WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/templates/' . $this->params[self::PARAM_PRESET] . '/' . TS_GALLERY_LANGUAGE . '/');
-        date_default_timezone_set(TSG_CFG_TIME_ZONE);   
-        
+        date_default_timezone_set(TSG_CFG_TIME_ZONE);
+
         $this->setTempPathMainImg(WB_PATH . '/temp/ts_gallery/main');
         $this->setTempUrlMainImg(WB_URL . '/temp/ts_gallery/main');
-        $this->setTempPathPrevImg(WB_PATH.'/temp/ts_gallery/prev');     
+        $this->setTempPathPrevImg(WB_PATH.'/temp/ts_gallery/prev');
         $this->setTempUrlPrevImg(WB_URL.'/temp/ts_gallery/prev');
-        
+
         // check if the TEMP data should be resetted
         if ($dbTSGconfig->getValue(dbTSGconfig::CFG_GAL_DELETE_TEMP_DATA)) {
             $mediaBrowser = new mediaBrowser();
@@ -88,7 +88,7 @@ class tsgFrontend {
             // reset the cfg command
             $dbTSGconfig->setValueByName('0', dbTSGconfig::CFG_GAL_DELETE_TEMP_DATA);
         }
-        
+
         if (!file_exists($this->getTempPathMainImg())) {
             try {
                 mkdir($this->getTempPathMainImg(), 0755, true);
@@ -107,12 +107,12 @@ class tsgFrontend {
                 return false;
             }
         }
-        
+
         $this->setPreviewWidth($dbTSGconfig->getValue(dbTSGconfig::CFG_GAL_IMG_PREV_WIDTH));
         $this->setPreviewHeight($dbTSGconfig->getValue(dbTSGconfig::CFG_GAL_IMG_PREV_HEIGHT));
         $this->setMainHeight($dbTSGconfig->getValue(dbTSGconfig::CFG_GAL_IMG_MAIN_HEIGHT));
         $this->setMainWidth($dbTSGconfig->getValue(dbTSGconfig::CFG_GAL_IMG_MAIN_WIDTH));
-        
+
         $mode = $dbTSGconfig->getValue(dbTSGconfig::CFG_GAL_IMG_MODE);
         if (in_array('width', $mode) && in_array('height', $mode)) {
             $this->setOptimizeMode(self::OPTIMIZE_MODE_BOTH);
@@ -123,9 +123,9 @@ class tsgFrontend {
         else {
             $this->setOptimizeMode(self::OPTIMIZE_MODE_WIDTH);
         }
-        
+
     } // __construct()
-    
+
     /**
      * @return the $previewWidth
      */
@@ -295,7 +295,7 @@ class tsgFrontend {
     {
         return $this->params;
     } // getParams()
-    
+
     /**
      * Set the params for the droplet {{kit_idea]]
      *
@@ -311,7 +311,7 @@ class tsgFrontend {
         }
         return true;
     } // setParams()
-    
+
     /**
      * Set $this->error to $error
      *
@@ -320,7 +320,7 @@ class tsgFrontend {
     public function setError($error) {
         $this->error = $error;
     } // setError()
-    
+
     /**
      * Get Error from $this->error;
      *
@@ -329,7 +329,7 @@ class tsgFrontend {
     public function getError() {
         return $this->error;
     } // getError()
-    
+
     /**
      * Check if $this->error is empty
      *
@@ -338,7 +338,7 @@ class tsgFrontend {
     public function isError() {
         return (bool) !empty($this->error);
     } // isError
-    
+
     /**
      * Process the desired template and returns the result as string
      *
@@ -356,13 +356,13 @@ class tsgFrontend {
         }
         return $result;
     } // getTemplate()
-    
+
     public function checkPicture($origin_url, $gallery_type, &$picture_url, &$picture_width, &$picture_height) {
         global $dbTSGconfig;
-        
-        $origin_relative_path = substr($origin_url, strlen(WB_URL. MEDIA_DIRECTORY)); 
+
+        $origin_relative_path = substr($origin_url, strlen(WB_URL. MEDIA_DIRECTORY));
         $origin_path = WB_PATH.MEDIA_DIRECTORY. $origin_relative_path;
-        
+
         if ($gallery_type == self::GALLERY_TYPE_MAIN) {
             $picture_path = $this->getTempPathMainImg() . $origin_relative_path;
             $picture_url = $this->getTempUrlMainImg() . $origin_relative_path;
@@ -376,12 +376,12 @@ class tsgFrontend {
             $cfg_width = $this->getPreviewWidth();
             $cfg_height = $this->getPreviewHeight();
         }
-        
+
         if (!file_exists($origin_path)) {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_FILE_NOT_FOUND, $origin_path)));
             return false;
         }
-        
+
         // get the origin filesize and filetime
         $origin_filemtime = filemtime($origin_path);
 
@@ -394,7 +394,7 @@ class tsgFrontend {
         list($origin_width, $origin_height) = getimagesize($origin_path);
 
         // get the new picture dimensions
-        if ($this->getOptimizeMode() == self::OPTIMIZE_MODE_BOTH) { 
+        if ($this->getOptimizeMode() == self::OPTIMIZE_MODE_BOTH) {
             // dimensions are fixed
             $picture_width = $cfg_width;
             $picture_height = $cfg_height;
@@ -436,7 +436,7 @@ class tsgFrontend {
         }
         return true;
     } // checkPicture()
-    
+
     public function action() {
         global $dbTSGgallery;
         global $dbTSGalbum;
@@ -446,7 +446,7 @@ class tsgFrontend {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, TSG_ERROR_PARAM_NAME_MISSING));
             return false;
         }
-        
+
         $SQL = sprintf("SELECT * FROM %s WHERE %s='%s'", $dbTSGgallery->getTableName(), dbTSGgallery::FIELD_NAME, $this->params[self::PARAM_NAME]);
         $result = array();
         if (!$dbTSGgallery->sqlExec($SQL, $result)) {
@@ -469,9 +469,9 @@ class tsgFrontend {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tool_error_id_invalid, $gallery_id)));
             return false;
         }
-        
+
         $images = array();
-        foreach ($albums as $album) {  
+        foreach ($albums as $album) {
             // get the album picture
             $album_main_url = '';
             $album_main_width = 0;
@@ -487,7 +487,7 @@ class tsgFrontend {
                 $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
                 return false;
             }
-                      
+
             // get the pictures
             $where = array(dbTSGpicture::FIELD_ALBUM_ID => $album[dbTSGalbum::FIELD_ID]);
             $pictures = array();
@@ -519,14 +519,14 @@ class tsgFrontend {
                     $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
                     return false;
                 }
-                
+
                 $prev_url = '';
                 $prev_height = 0;
                 $prev_width = 0;
                 if (!$this->checkPicture($picture[dbTSGpicture::FIELD_IMAGE_URL], self::GALLERY_TYPE_PREVIEW, $prev_url, $prev_width, $prev_height)) {
                     $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
                     return false;
-                }                
+                }
                 $picture_array[] = array(
                         'album_id' => $album[dbTSGalbum::FIELD_ID],
                         'main' => array(
@@ -543,8 +543,8 @@ class tsgFrontend {
                                     ),
                         );
             }
-            
-            
+
+
             $images[] = array(
                     'album' => array(
                             'id' => $album[dbTSGalbum::FIELD_ID],
@@ -570,7 +570,7 @@ class tsgFrontend {
         $result = $this->getTemplate('gallery.lte', $gallery);
         return $this->show($result);
     } // show()
-    
+
     /**
      * prompt the formatted result
      *
@@ -585,5 +585,5 @@ class tsgFrontend {
         );
         return $this->getTemplate('body.lte', $data);
     } // show_main()
-    
+
 } // class tsgFrontend

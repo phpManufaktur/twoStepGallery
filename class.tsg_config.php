@@ -1,33 +1,33 @@
 <?php
 
 /**
- * tsGallery
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2011 - 2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
 
@@ -37,7 +37,7 @@ if (!class_exists('dbconnectle')) {
 }
 
 class dbTSGconfig extends dbConnectLE {
-    
+
     const FIELD_ID				= 'cfg_id';
     const FIELD_NAME			= 'cfg_name';
     const FIELD_TYPE			= 'cfg_type';
@@ -47,10 +47,10 @@ class dbTSGconfig extends dbConnectLE {
     const FIELD_STATUS			= 'cfg_status';
     const FIELD_UPDATE_BY		= 'cfg_update_by';
     const FIELD_UPDATE_WHEN		= 'cfg_update_when';
-    
+
     const STATUS_ACTIVE			= 1;
     const STATUS_DELETED		= 0;
-    
+
     const TYPE_UNDEFINED		= 0;
     const TYPE_ARRAY			= 7;
     const TYPE_BOOLEAN			= 1;
@@ -61,7 +61,7 @@ class dbTSGconfig extends dbConnectLE {
     const TYPE_PATH				= 5;
     const TYPE_STRING		    = 6;
     const TYPE_URL				= 8;
-        
+
     public $type_array = array(
             self::TYPE_UNDEFINED	=> '-UNDEFINED-',
             self::TYPE_ARRAY		=> 'ARRAY',
@@ -74,21 +74,21 @@ class dbTSGconfig extends dbConnectLE {
             self::TYPE_STRING		=> 'STRING',
             self::TYPE_URL			=> 'URL'
     );
-    
+
     private $createTable 		= false;
     private $message			= '';
-     
+
     const CFG_MEDIA_DIR			    = 'cfgMediaDir';
     const CFG_IMAGE_EXTENSIONS      = 'cfgImageExtensions';
     const CFG_MB_IMG_ICON_WIDTH     = 'cfgMBimageIconWidth';
     const CFG_MB_IMG_PREVIEW_WIDTH  = 'cfgMBimagePreviewWidth';
     const CFG_GAL_IMG_MAIN_WIDTH    = 'cfgGalImgMainWidth';
-    const CFG_GAL_IMG_MAIN_HEIGHT   = 'cfgGalImgMainHeight';   
+    const CFG_GAL_IMG_MAIN_HEIGHT   = 'cfgGalImgMainHeight';
     const CFG_GAL_IMG_PREV_WIDTH    = 'cfgGalImgPrevWidth';
     const CFG_GAL_IMG_PREV_HEIGHT   = 'cfgGalImgPrevHeight';
     const CFG_GAL_DELETE_TEMP_DATA  = 'cfgGalDeleteTempData';
     const CFG_GAL_IMG_MODE          = 'cfgGalImgMode';
-    
+
     public $config_array = array(
             array('TSG_LABEL_CFG_MEDIA_DIR', self::CFG_MEDIA_DIR, self::TYPE_STRING, '/ts_gallery', 'TSG_HINT_CFG_MEDIA_DIR'),
             array('TSG_LABEL_CFG_IMAGE_EXTENSIONS', self::CFG_IMAGE_EXTENSIONS, self::TYPE_ARRAY, 'gif,jpg,jpeg,png', 'TSG_HINT_CFG_IMAGE_EXTENSIONS'),
@@ -101,10 +101,10 @@ class dbTSGconfig extends dbConnectLE {
             array('TSG_LABEL_CFG_DELETE_TEMP_DATA', self::CFG_GAL_DELETE_TEMP_DATA, self::TYPE_BOOLEAN, '0', 'TSG_HINT_CFG_GAL_DELETE_TEMP_DATA'),
             array('TSG_LABEL_CFG_GAL_IMG_MODE', self::CFG_GAL_IMG_MODE, self::TYPE_ARRAY, 'width', 'TSG_HINT_CFG_GAL_IMG_MODE')
     );
-    
+
     /**
-     * Constructor 
-     * 
+     * Constructor
+     *
      * @param boolean $createTables - true, if the table should be created
      */
     public function __construct($createTable = false) {
@@ -138,7 +138,7 @@ class dbTSGconfig extends dbConnectLE {
         // set the correct time zone!
         date_default_timezone_set(TSG_CFG_TIME_ZONE);
     } // __construct()
-    
+
     /**
      * @return the $createTables
      */
@@ -157,13 +157,13 @@ class dbTSGconfig extends dbConnectLE {
 
     /**
      * Set the message
-     * 
+     *
      * @param string $message
      */
 	public function setMessage($message) {
         $this->message = $message;
     } // setMessage()
-    
+
     /**
      * Get Message from $this->message;
      *
@@ -172,7 +172,7 @@ class dbTSGconfig extends dbConnectLE {
     public function getMessage() {
         return $this->message;
     } // getMessage()
-    
+
     /**
      * Check if $this->message is empty
      *
@@ -181,14 +181,14 @@ class dbTSGconfig extends dbConnectLE {
     public function isMessage() {
         return (bool) !empty($this->message);
     } // isMessage
-    
+
     /**
      * set the value $new_value to the record with the name $name
      *
      * @param string $new_value - the new value
      * @param integer $name - name of the record, self::CFG_ ...
      *
-     * @return boolean 
+     * @return boolean
      *
      */
     public function setValueByName($new_value, $name) {
@@ -205,7 +205,7 @@ class dbTSGconfig extends dbConnectLE {
         }
         return $this->setValue($new_value, $config[0][self::FIELD_ID]);
     } // setValueByName()
-    
+
     /**
      * Adds a slash to the end of the desired string if no slash is at the end
      *
@@ -216,7 +216,7 @@ class dbTSGconfig extends dbConnectLE {
         $path = substr($path, strlen($path)-1, 1) == "/" ? $path : $path."/";
         return $path;
     } // addSlash()
-    
+
     /**
      * Change a string to a float value, uses the country definitions from the
      * language file
@@ -230,11 +230,11 @@ class dbTSGconfig extends dbConnectLE {
         $float = floatval($string);
         return $float;
     } // str2float()
-    
+
     /**
      * Change a string to a integer value, uses the country definitions from the
      * language file
-     * 
+     *
      * @param string $string
      * @return integer
      */
@@ -244,7 +244,7 @@ class dbTSGconfig extends dbConnectLE {
         $int = intval($string);
         return $int;
     } // str2int()
-    
+
     /**
      * Checks the desired email address for logical errors
      *
@@ -259,7 +259,7 @@ class dbTSGconfig extends dbConnectLE {
             return false;
         }
     } // validateEMail()
-    
+
     /**
      * set the value $new_value to the record with the ID $id
      *
@@ -331,7 +331,7 @@ class dbTSGconfig extends dbConnectLE {
             $value = implode(",", $val);
             break;
         endswitch;
-        
+
         unset($config[self::FIELD_ID]);
         $config[self::FIELD_VALUE] = (string) $value;
         $config[self::FIELD_UPDATE_BY] = 'SYSTEM';
@@ -342,7 +342,7 @@ class dbTSGconfig extends dbConnectLE {
         }
         return true;
     } // setValue()
-    
+
     /**
      * Returns the value of the record with the name $name.
      * This function format the returned value in the expected type, i.e. as
@@ -393,10 +393,10 @@ class dbTSGconfig extends dbConnectLE {
         endswitch;
         return $result;
     } // getValue()
-    
+
     /**
      * Checks the configuration and set the default values if they not exists
-     * 
+     *
      * @return boolean
      */
     public function checkConfig() {
@@ -426,5 +426,5 @@ class dbTSGconfig extends dbConnectLE {
         }
         return true;
     } // checkConfig()
-    
+
 } // class dbTSGconfig

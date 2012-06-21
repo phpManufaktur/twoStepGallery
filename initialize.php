@@ -1,33 +1,33 @@
 <?php
 
 /**
- * tsGallery
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2011 - 2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
 
@@ -49,11 +49,11 @@ if(!file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .
     // default language is DE !!!
     require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php');
     // this constant tells in which language the addon is executed
-    if (!defined('TS_GALLERY_LANGUAGE')) define('TS_GALLERY_LANGUAGE', 'DE'); 
+    if (!defined('TS_GALLERY_LANGUAGE')) define('TS_GALLERY_LANGUAGE', 'DE');
 }
 else {
     require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php');
-    if (!defined('TS_GALLERY_LANGUAGE')) define('TS_GALLERY_LANGUAGE', LANGUAGE); 
+    if (!defined('TS_GALLERY_LANGUAGE')) define('TS_GALLERY_LANGUAGE', LANGUAGE);
 }
 
 global $parser;
@@ -98,7 +98,7 @@ if (!class_exists('Dwoo')) {
                             )
                     )
             );
-        } 
+        }
     }
     else {
         trigger_error(sprintf("[ <b>%s</b> ] Can't include Dwoo Template Engine!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
@@ -117,7 +117,7 @@ if (!is_object($parser)) {
                             get_include_path(),
                     ))
             );
-} 
+}
 
 // check for dbConnect_LE
 if (!class_exists('dbconnectle')) {

@@ -1,35 +1,40 @@
 <?php
 
 /**
- * tsGallery
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2011 - 2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
+
+if ('á' != "\xc3\xa1") {
+  // important: language files must be saved as UTF-8 (without BOM)
+  trigger_error('The language file <b>'.basename(__FILE__).'</b> is damaged, it must be saved <b>UTF-8</b> encoded!', E_USER_ERROR);
+}
 
 // Module description
 $module_description    = 'tsGallery - zweistufige Bildergalerie';
@@ -51,7 +56,7 @@ define('TSG_CFG_THOUSAND_SEPARATOR',			'.');
 define('TSG_CFG_TIME_LONG_STR',				    'H:i:s');
 define('TSG_CFG_TIME_STR',						'H:i');
 define('TSG_CFG_TIME_ZONE',					    'Europe/Berlin');
- 
+
 define('TSG_CONFIRM_FILE_DELETE',               '<p>Soll die Datei <b>%s</b> wirklich  gelöscht werden?</p>');
 define('TSG_CONFIRM_RMDIR',                     '<p>Soll das Verzeichnis <b>%s</b> mit allen enthaltenen Dateien wirklich gelöscht werden?</p>');
 
@@ -151,7 +156,7 @@ define('TSG_MSG_PICTURE_DELETED',               '<p>Die Bilder mit den <b>ID\'s 
 define('TSG_MSG_PICTURE_UPDATED',               '<p>Das Bild <b>%s</b> wurde aktualisiert.</p>');
 define('TSG_MSG_RMDIR_SUCCESS',                 '<p>Das Verzeichnis <b>%s</b> wurde gelöscht.</p>');
 define('TSG_MSG_UPLOAD_INVALID_EXTENSION',      '<p>Die übertragene Datei wurde zurückgewiesen. Erlaubt sind nur Grafikdateien mit den Endungen <b>%s</b>.</p>');
-define('TSG_MSG_UPLOAD_NO_FILE',                '<p>Es wurde keine Datei übertragen ...</p>'); 
+define('TSG_MSG_UPLOAD_NO_FILE',                '<p>Es wurde keine Datei übertragen ...</p>');
 define('TSG_MSG_UPLOAD_SUCCESS',				'<p>Die Datei <b>%s</b> wurde erfolgreich übertragen.</p>');
 
 define('TSG_TITLE_CONFIRM_FILE_DELETE',         'Datei löschen');

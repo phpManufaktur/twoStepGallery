@@ -1,35 +1,35 @@
 <?php
 
 /**
- * tsGallery
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2011 - 2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
-// include .secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
 }
-// end include .secure.php
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
+}
+// end include class.secure.php
 
 // load the required libraries
 require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php';
@@ -89,13 +89,13 @@ require_once WB_PATH . '/framework/functions.php';
 } //  imageExtensionFilter
 
 class mediaBrowser {
-    
+
     const REQUEST_ACTION			= 'act';
     const REQUEST_DIRECTORY         = 'dir';
     const REQUEST_FILE              = 'file';
     const REQUEST_UPLOAD            = 'upl';
     const REQUEST_MKDIR             = 'mkdir';
-    
+
     const ACTION_MEDIA_BROWSER = 'mbamb';
     const ACTION_MEDIA_CHECK            = 'mbac';
     const ACTION_MEDIA_CHDIR            = 'mbacd';
@@ -105,8 +105,8 @@ class mediaBrowser {
     const ACTION_MEDIA_FILE_SELECT      = 'mbafs';
     const ACTION_MEDIA_FILE_DELETE      = 'mbafd';
     const ACTION_MEDIA_FILE_DELETE_EXEC = 'mbafde';
-    const ACTION_MEDIA_UPLOAD = 'mbaupl';   
-    
+    const ACTION_MEDIA_UPLOAD = 'mbaupl';
+
     private $allowedExtensions;
     private $mediaPath;
     private $mediaURL;
@@ -118,11 +118,11 @@ class mediaBrowser {
     private $message = '';
     private $templatePath = '';
     private $pageLink = '';
-    
+
     /**
      * es added for compatibility to imageTweak
      * @see http://phpmanufaktur.de/image_tweak
-     */ 
+     */
     const CLASS_CROP		= 'crop';
     const CLASS_TOP			= 'top';
     const CLASS_BOTTOM		= 'bottom';
@@ -130,13 +130,13 @@ class mediaBrowser {
     const CLASS_RIGHT		= 'right';
     const CLASS_ZOOM	    = 'zoom';
     const CLASS_NO_CACHE	= 'no-cache';
-    
+
     const SELECT_MODE_SINGLE    = 1;
     const SELECT_MODE_MULTIPLE  = 2;
     const SELECT_MODE_NONE      = 0;
-    
-    const MB_TEMP_DIR       = '/temp/media_browser'; 
-    
+
+    const MB_TEMP_DIR       = '/temp/media_browser';
+
     public function __construct() {
         global $dbTSGconfig;
         // first get the allowed file extensions for the media browser
@@ -146,18 +146,18 @@ class mediaBrowser {
         $this->setMediaPath(WB_PATH.MEDIA_DIRECTORY);
         $this->setMediaURL(WB_URL.MEDIA_DIRECTORY);
         $this->setImagePath(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/images/');
-        $this->setImageURL(WB_URL.'/modules/'.basename(dirname(__FILE__)).'/images/');        
+        $this->setImageURL(WB_URL.'/modules/'.basename(dirname(__FILE__)).'/images/');
         $this->setTempPath(WB_PATH.self::MB_TEMP_DIR);
         $this->setTempURL(WB_URL.self::MB_TEMP_DIR);
         $this->setTemplatePath(WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/templates/') ;
         if (!file_exists($this->getTempPath())) {
             try {
                 mkdir($this->getTempPath(), 0755, true);
-            } 
+            }
             catch(ErrorException $ex) {
                 $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_MKDIR, $this->getTempPath(), $ex->getMessage())));
                 return false;
-            }            
+            }
         }
     } // __construct()
 
@@ -240,7 +240,7 @@ class mediaBrowser {
     {
         $this->error = $error;
     }
-    
+
     public function isError() {
         return (bool) !empty($this->error);
     }
@@ -260,7 +260,7 @@ class mediaBrowser {
     {
         $this->message = $message;
     }
-    
+
     public function isMessage() {
         return (bool) !empty($this->message);
     }
@@ -344,7 +344,7 @@ class mediaBrowser {
     {
         $this->allowedExtensions = $allowed_extensions;
     }
-    
+
     /**
      * Parse the desired $template with $template_data and returns the resulting
      * output of the template engine
@@ -363,10 +363,10 @@ class mediaBrowser {
         }
         return $result;
     } // getTemplate()
-    
+
     /**
      * Delete a directory recursive with all files
-     * 
+     *
      * @param string $directory
      * @param boolean $empty - if true, delete only empty directory
      * @return boolean
@@ -379,11 +379,11 @@ class mediaBrowser {
         if (!file_exists($directory) || !is_dir($directory)) {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_RMDIR_DIR_INVALID, $directory)));
             return false;
-        } 
+        }
         elseif (!is_readable($directory)) {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_RMDIR_DIR_NOT_READABLE, $directory)));
             return false;
-        } 
+        }
         else {
             $directoryHandle = opendir($directory);
             while (false !== ($contents = readdir($directoryHandle))) {
@@ -391,7 +391,7 @@ class mediaBrowser {
                     $path = $directory . DIRECTORY_SEPARATOR . $contents;
                     if (is_dir($path)) {
                         $this->rrmdir($path);
-                    } 
+                    }
                     else {
                         unlink($path);
                     }
@@ -408,10 +408,10 @@ class mediaBrowser {
             return true;
         }
     } // rrmdir()
-    
+
     /**
      * Execute the command the directory $remove_directory
-     * 
+     *
      * @param string $remove_directory
      * @return boolean
      */
@@ -431,10 +431,10 @@ class mediaBrowser {
         }
         return true;
     } // execRemoveDirectory()
-    
+
     /**
      * Show a Dialog to confirm the remove command for a directory
-     * 
+     *
      * @param string $remove_directory
      * @return string confirm dialog
      */
@@ -466,10 +466,10 @@ class mediaBrowser {
                 );
         return $this->getTemplate('backend.media.browser.confirm.lte', $data);
     } // confirmRemoveDirectory()
-    
+
     /**
      * Show a dialog to confirm the deletion of a file
-     * 
+     *
      * @param string $delete_file
      * @return string confirm dialog
      */
@@ -501,10 +501,10 @@ class mediaBrowser {
         );
         return $this->getTemplate('backend.media.browser.confirm.lte', $data);
     } // confirmDeleteFile()
-    
+
     /**
      * Execute the command to delete a file
-     * 
+     *
      * @param string $delete_file
      */
     public function execDeleteFile($delete_file = '') {
@@ -520,10 +520,10 @@ class mediaBrowser {
             return false;
         }
     } // execDeleteFile()
-    
+
     /**
      * Add a slash to the end of a path if the slash not exists
-     * 
+     *
      * @param string reference $path
      * @return string $path
      */
@@ -531,7 +531,7 @@ class mediaBrowser {
         $path = substr($path, strlen($path)-1, 1) == DIRECTORY_SEPARATOR ? $path : $path . DIRECTORY_SEPARATOR;
         return $path;
     } // addSlash()
-    
+
     /**
      * Remove a leading slash from path string
      * @param string reference $path
@@ -541,13 +541,13 @@ class mediaBrowser {
         $path = substr($path, 0, 1) == DIRECTORY_SEPARATOR ? substr($path, 1, strlen($path)) : $path;
         return $path;
     } // removeLeadingSlash()
-    
+
     /**
      * Processing a file upload
-     * 
-     * @return boolean 
+     *
+     * @return boolean
      */
-    public function processFileUpload() {      
+    public function processFileUpload() {
         $dir = isset($_REQUEST[self::REQUEST_DIRECTORY]) ? $_REQUEST[self::REQUEST_DIRECTORY] : '';
         $dir = $this->getMediaPath(). DIRECTORY_SEPARATOR. $dir;
         $this->addSlash($dir);
@@ -557,7 +557,7 @@ class mediaBrowser {
                 $explode = explode('.', $_FILES[self::REQUEST_UPLOAD]['name']);
                 $ext = end($explode);
                 $ext = strtolower($ext);
-                if (!in_array($ext, $this->getAllowedExtensions())) { 
+                if (!in_array($ext, $this->getAllowedExtensions())) {
                     // disallowed file or filetype - delete uploaded file
                     @unlink($_FILES[self::REQUEST_UPLOAD]['tmp_name']);
                     $this->setMessage(sprintf(TSG_MSG_UPLOAD_INVALID_EXTENSION, implode(', ', $this->getAllowedExtensions())));
@@ -597,10 +597,10 @@ class mediaBrowser {
             return false;
         }
     } // processUploadedFile()
-    
+
     /**
      * Create a directory
-     * 
+     *
      * @return boolean
      */
     public function createDirectory() {
@@ -611,7 +611,7 @@ class mediaBrowser {
             $dir = $dir . strtolower($_REQUEST[self::REQUEST_MKDIR]);
             try {
                 mkdir($dir, 0755, true);
-            } 
+            }
             catch(ErrorException $ex) {
                 $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_MKDIR, $dir, $ex->getMessage())));
                 return false;
@@ -625,34 +625,34 @@ class mediaBrowser {
             return false;
         }
     } // createDirectory()
-    
+
     public function selectFiles() {
         print_r($_REQUEST[self::REQUEST_FILE]);
         return true;
     }
-    
+
     /**
      * Shows a Media Browser for the selected $media_directory
-     * 
+     *
      * @param string $media_directory
      * @return boolean|Ambigous <string, boolean, mixed>
      */
     public function dlgMediaDirectory($media_directory = '', $select_mode = self::SELECT_MODE_NONE) {
         global $dbTSGconfig;
         global $kitTools;
-        
+
         $maxIconWidth = $dbTSGconfig->getValue(dbTSGconfig::CFG_MB_IMG_ICON_WIDTH);
         $maxPreviewWidth = $dbTSGconfig->getValue(dbTSGconfig::CFG_MB_IMG_PREVIEW_WIDTH);
-        
+
         $media_directory = substr($media_directory, 0, 1) == DIRECTORY_SEPARATOR ? substr($media_directory, 1, strlen($media_directory)) : $media_directory;
         $directory = $this->getMediaPath().DIRECTORY_SEPARATOR.$media_directory;
         $images = array();
         $directories = array();
         $parent_directory = $this->getMediaURL();
-        
+
         // use LEPtoken if neccessary
         //$leptoken = (defined('LEPTON_VERSION') && isset($_GET['leptoken'])) ? sprintf('&amp;leptoken=%s', $_GET['leptoken']) : '';
-        
+
         $iterator = new imageExtensionFilter(new RecursiveDirectoryIterator($directory), $this->getAllowedExtensions());
         foreach ($iterator as $fileinfo) {
             if ($fileinfo->isFile()) {
@@ -675,7 +675,7 @@ class mediaBrowser {
                 }
                 if (!file_exists($icon_path.$fileinfo->getBasename()) ||
                     ($fileinfo->getMTime() != ($mtime = filemtime($icon_path.$fileinfo->getBasename())))) {
-                  // create a new icon 
+                  // create a new icon
                   if (!file_exists($icon_path)) {
                       try {
                           mkdir($icon_path, 0755, true);
@@ -686,7 +686,7 @@ class mediaBrowser {
                       }
                   }
                   if (false == ($tweaked_file = $this->createTweakedFile(
-                          $fileinfo->getBasename(), 
+                          $fileinfo->getBasename(),
                           strtolower(substr($fileinfo->getBasename(), strrpos($fileinfo->getBasename(), '.')+1)),
                           $fileinfo->__toString(),
                           $iconWidth,
@@ -698,7 +698,7 @@ class mediaBrowser {
                       // error creating the tweaked file
                       $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
                       return false;
-                  }  
+                  }
                 }
                 // create Preview
                 $preview_path = $this->getTempPath().DIRECTORY_SEPARATOR.'preview'.$media_dir;
@@ -742,8 +742,8 @@ class mediaBrowser {
                         return false;
                     }
                 }
-                
-                
+
+
                 $images[$fileinfo->getFilename()] = array(
                         'is_file'         => 1,
                         'basename'        => $fileinfo->getBasename(),
@@ -760,7 +760,7 @@ class mediaBrowser {
                                                         self::REQUEST_ACTION  => self::ACTION_MEDIA_FILE_SELECT,
                                                         self::REQUEST_FILE    => substr($fileinfo->__toString(), strlen(WB_PATH.MEDIA_DIRECTORY))))),
                                         'text'   => TSG_STR_SELECT,
-                                        'name' => self::REQUEST_FILE), 
+                                        'name' => self::REQUEST_FILE),
                                 'delete'    => array(
                                         'url'    => sprintf('%s%s%s',
                                                 $this->getPageLink(),
@@ -769,7 +769,7 @@ class mediaBrowser {
                                                         self::REQUEST_ACTION  => self::ACTION_MEDIA_FILE_DELETE,
                                                         self::REQUEST_FILE    => substr($fileinfo->__toString(), strlen(WB_PATH.MEDIA_DIRECTORY))))),
                                         'text'   => TSG_STR_DELETE,
-                                        'name' => self::REQUEST_FILE)), 
+                                        'name' => self::REQUEST_FILE)),
                         'media_dir'       => $media_dir,
                         'icon'            => array(
                                 'url'    => WB_URL. substr($icon_path, strlen(WB_PATH)) . $fileinfo->getBasename(),
@@ -809,13 +809,13 @@ class mediaBrowser {
                                                         self::REQUEST_ACTION    => self::ACTION_MEDIA_RMDIR,
                                                         self::REQUEST_DIRECTORY => substr($fileinfo->__toString(), strlen(WB_PATH.MEDIA_DIRECTORY))))),
                                         'text'   => TSG_STR_RMDIR,
-                                        'name' => self::REQUEST_DIRECTORY)), 
+                                        'name' => self::REQUEST_DIRECTORY)),
                         'basename'    => $fileinfo->getBasename(),
                         'path'        => $fileinfo->__toString(),
                         'url'         => WB_URL. substr($fileinfo->__toString(), strlen(WB_PATH)));
             }
         }
-        
+
         // sort the directories alphabetical
         asort($directories);
         // if it is not the root directory insert a "move up" link at the first position ...
@@ -834,24 +834,24 @@ class mediaBrowser {
                                                     self::REQUEST_ACTION    => self::ACTION_MEDIA_CHDIR,
                                                     self::REQUEST_DIRECTORY => $parent_directory))),
                                     'text'   => TSG_STR_CHDIR),
-                                    'name' => self::REQUEST_DIRECTORY), 
+                                    'name' => self::REQUEST_DIRECTORY),
                     'path'        => $this->getMediaPath().DIRECTORY_SEPARATOR.$parent_directory,
                     'url'         => $this->getMediaURL().DIRECTORY_SEPARATOR.$parent_directory);
             array_unshift($directories, $pd);
         }
-        
+
         // sort the images alphabetical
         asort($images);
         $files = $directories + $images;
-        
+
         $folder_path = $this->getImagePath().'mb_folder.png';
         $folder_url = $this->getImageURL().'mb_folder.png';
         if (!file_exists($folder_path)) {
-            $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_FILE_NOT_FOUND, $folder_path))); 
+            $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_FILE_NOT_FOUND, $folder_path)));
             return false;
         }
         list($folder_width, $folder_height) = getimagesize($folder_path);
-        
+
         $parent_path = $this->getImagePath().'mb_parent.png';
         $parent_url = $this->getImageURL().'mb_parent.png';
         if (!file_exists($parent_path)) {
@@ -859,7 +859,7 @@ class mediaBrowser {
             return false;
         }
         list($parent_width, $parent_height) = getimagesize($parent_path);
-        
+
         $delete_path = $this->getImagePath().'mb_delete.png';
         $delete_url = $this->getImageURL().'mb_delete.png';
         if (!file_exists($delete_path)) {
@@ -867,7 +867,7 @@ class mediaBrowser {
             return false;
         }
         list($delete_width, $delete_height) = getimagesize($delete_path);
-        
+
         // pepare template
         $data = array(
                 'form' => array(
@@ -891,7 +891,7 @@ class mediaBrowser {
                                 'mkdir' => TSG_HEADER_MB_MKDIR),
                         'btn' => array(
                                 'ok' => TSG_BTN_OK
-                                )        
+                                )
                         ),
                 'directory' => array(
                         'name' => mediaBrowser::REQUEST_DIRECTORY,
@@ -927,11 +927,11 @@ class mediaBrowser {
                 );
         return $this->getTemplate('backend.media.browser.lte', $data);
     } // dlgMediaDirectory
-    
+
     /**
      * Master routine from imageTweak to create optimized images.
      * @see http://phpmanufaktur.de/image_tweak
-     * 
+     *
      * @param string $filename - basename of the image
      * @param string $extension - extension of the image
      * @param string $file_path - complete path to the image
@@ -944,8 +944,8 @@ class mediaBrowser {
      * @param array $classes - optional es to force image operations
      * @return mixed - path to the new file on succes, boolean false on error
      */
-    public function createTweakedFile($filename, $extension, $file_path, 
-            $new_width, $new_height, $origin_width, $origin_height, 
+    public function createTweakedFile($filename, $extension, $file_path,
+            $new_width, $new_height, $origin_width, $origin_height,
             $origin_filemtime, $new_path, $classes=array()) {
         $extension = strtolower($extension);
 		switch ($extension):
@@ -959,7 +959,7 @@ class mediaBrowser {
 	    case 'png':
 	        $origin_image = imagecreatefrompng($file_path);
 	        break;
-	    default: 
+	    default:
 	        // unsupported image type
 	    echo $extension;
 	        $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_TWEAK_INVALID_EXTENSION, $extension)));
@@ -968,7 +968,7 @@ class mediaBrowser {
 
 	  	// create new image of $new_width and $new_height
 	  	$new_image = imagecreatetruecolor($new_width, $new_height);
-	  	// Check if this image is PNG or GIF, then set if Transparent  
+	  	// Check if this image is PNG or GIF, then set if Transparent
 	  	if (($extension == 'gif') OR ($extension == 'png')) {
 	  	    imagealphablending($new_image, false);
 	  	    imagesavealpha($new_image,true);
@@ -978,10 +978,10 @@ class mediaBrowser {
 	  	if (in_array(self::CLASS_CROP, $classes)) {
 	  	    // don't change image size...
 	  	    $zoom = 100;
-	  	    foreach ($classes as $class) { 
+	  	    foreach ($classes as $class) {
 	  	        if (stripos($class, self::CLASS_ZOOM.'[') !== false) {
-	  	            $x = substr($class, strpos($class, '[')+1, (strpos($class, ']') - (strpos($class, '[')+1))); 
-	  	            $zoom = (int) $x; 
+	  	            $x = substr($class, strpos($class, '[')+1, (strpos($class, ']') - (strpos($class, '[')+1)));
+	  	            $zoom = (int) $x;
 	  	            if ($zoom < 1) $zoom = 1;
 	  	            if ($zoom > 100) $zoom = 100;
 	  	        }
@@ -994,7 +994,7 @@ class mediaBrowser {
 	  	        $x_pos = $origin_width-$new_width;
 	  	    }
 	  	    else {
-	  	        $x_pos = ((int) $origin_width/2)-((int) $new_width/2);	
+	  	        $x_pos = ((int) $origin_width/2)-((int) $new_width/2);
 	  	    }
 	  	    if (in_array(self::CLASS_TOP, $classes)) {
 	  	        $y_pos = 0;
@@ -1009,7 +1009,7 @@ class mediaBrowser {
 	  	        // change image size and crop image
 	  	        $faktor = $zoom/100;
 	  	        $zoom_width = (int) ($origin_width*$faktor);
-	  	        $zoom_height = (int) ($origin_height*$faktor); 
+	  	        $zoom_height = (int) ($origin_height*$faktor);
 	  	        imagecopyresampled($new_image, $origin_image, 0, 0, $x_pos, $y_pos, $new_width, $new_height, $zoom_width, $zoom_height);
 	  	    }
 	  	    else {
@@ -1021,7 +1021,7 @@ class mediaBrowser {
 	  	    // resample image
 	  	    imagecopyresampled($new_image, $origin_image, 0, 0, 0, 0, $new_width, $new_height, $origin_width, $origin_height);
 	  	}
-	  	
+
 	  	if (!file_exists($new_path)) {
 	  	    try {
 	  	        mkdir($new_path, 0755, true);
@@ -1033,22 +1033,22 @@ class mediaBrowser {
 	  	}
 	  	$new_file = $new_path.$filename;
 	  	//Generate the file, and rename it to $newfilename
-	  	switch ($extension): 
-	  	case 'gif': 
-	  	    imagegif($new_image, $new_file); 
+	  	switch ($extension):
+	  	case 'gif':
+	  	    imagegif($new_image, $new_file);
        	    break;
        	case 'jpg':
-       	case 'jpeg': 
-       	    imagejpeg($new_image, $new_file, 90); // static setting for the JPEG Quality 
+       	case 'jpeg':
+       	    imagejpeg($new_image, $new_file, 90); // static setting for the JPEG Quality
        	    break;
-       	case 'png': 
-       	    imagepng($new_image, $new_file); 
+       	case 'png':
+       	    imagepng($new_image, $new_file);
        	    break;
-       	default:  
+       	default:
        	    // unsupported image type
        	    return false;
        	endswitch;
-    
+
        	if (!chmod($new_file, 0644)) {
        	    $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_CHMOD, basename($new_file))));
        	    return false;
@@ -1057,7 +1057,7 @@ class mediaBrowser {
        	    $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_TOUCH, basename($new_file))));
        	    return false;
        	}
-       	return $new_file;	  
+       	return $new_file;
 	} // createTweakedFile()
-    
+
 } //  mediaBrowser

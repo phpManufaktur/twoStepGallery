@@ -1,34 +1,33 @@
 <?php
 
 /**
- * tsGallery
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * twoStepGallery
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2011 - 2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", 
-                $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
 
@@ -37,7 +36,7 @@ require_once WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php';
 
 
 class tsGallery {
-    
+
     const REQUEST_ACTION			= 'act';
     const REQUEST_ITEMS				= 'its';
     const REQUEST_GALLERY_SELECT    = 'gls';
@@ -45,7 +44,7 @@ class tsGallery {
     const REQUEST_ALBUM_DELETE      = 'albd';
     const REQUEST_GALLERY_DELETE    = 'gld';
     const REQUEST_PICTURE_DELETE    = 'picd';
-    
+
     const ACTION_ABOUT				= 'abt';
     const ACTION_CONFIG				= 'cfg';
     const ACTION_CONFIG_CHECK	    = 'cfgc';
@@ -58,15 +57,15 @@ class tsGallery {
     const ACTION_ALBUM_IMG_CHANGE   = 'albic';
     const ACTION_PICTURE_ADD        = 'pica';
     const ACTION_PICTURE_CHECK      = 'picc';
-    
+
     const SESSION_PARAMS            = 'tsg_params';
-    
+
     private $tab_navigation_array = array(
             self::ACTION_GALLERY    => TSG_TAB_GALLERY,
             self::ACTION_CONFIG		=> TSG_TAB_CONFIG,
             self::ACTION_ABOUT		=> TSG_TAB_ABOUT
             );
-    
+
     private $page_link 				= '';
     private $img_url				= '';
     private $template_path			= '';
@@ -76,7 +75,7 @@ class tsGallery {
     private $media_url				= '';
     private $tsg_media_path         = '';
     private $tsg_media_url          = '';
-    
+
     /**
      * Constructor for tsGallery
      */
@@ -91,7 +90,7 @@ class tsGallery {
         $this->setMediaPath(WB_PATH.MEDIA_DIRECTORY);
         $this->setMediaURL(WB_URL.MEDIA_DIRECTORY);
     } // __construct()
-    
+
     /**
      * @return the $tsg_media_path
      */
@@ -212,7 +211,7 @@ class tsGallery {
     protected function setError($error) {
         $this->error = $error;
     } // setError()
-    
+
     /**
      * Get Error from $this->error;
      *
@@ -221,7 +220,7 @@ class tsGallery {
     public function getError() {
         return $this->error;
     } // getError()
-    
+
     /**
      * Check if $this->error is empty
      *
@@ -230,14 +229,14 @@ class tsGallery {
     public function isError() {
         return (bool) !empty($this->error);
     } // isError
-    
+
     /**
      * Reset Error to empty String
      */
     protected function clearError() {
         $this->error = '';
     }
-    
+
     /** Set $this->message to $message
      *
      * @param string $message
@@ -245,7 +244,7 @@ class tsGallery {
     public function setMessage($message) {
         $this->message = $message;
     } // setMessage()
-    
+
     /**
      * Get Message from $this->message;
      *
@@ -254,7 +253,7 @@ class tsGallery {
     public function getMessage() {
         return $this->message;
     } // getMessage()
-    
+
     /**
      * Check if $this->message is empty
      *
@@ -263,7 +262,7 @@ class tsGallery {
     public function isMessage() {
         return (bool) !empty($this->message);
     } // isMessage
-    
+
     /**
      * Return Version of Module
      *
@@ -286,11 +285,11 @@ class tsGallery {
         }
         return -1;
     } // getVersion()
-    
+
     /**
      * Parse the desired $template with $template_data and returns the resulting
      * output of the template engine
-     * 
+     *
      * @param string $template - only template name
      * @param array $template_data
      * @return string template output
@@ -305,7 +304,7 @@ class tsGallery {
         }
         return $result;
     } // getTemplate()
-     
+
     /**
      * Prevent XSS Cross Site Scripting
      *
@@ -321,7 +320,7 @@ class tsGallery {
         }
         return $request;
     } // xssPrevent()
-    
+
     /**
      * Action handler of the class
      *
@@ -336,7 +335,7 @@ class tsGallery {
             }
         }
         $action = isset($_REQUEST[self::REQUEST_ACTION]) ? $_REQUEST[self::REQUEST_ACTION] : self::ACTION_DEFAULT;
-    
+
         if (isset($_FILES[mediaBrowser::REQUEST_UPLOAD])) {
             // special: file upload!
             $action = mediaBrowser::ACTION_MEDIA_UPLOAD;
@@ -345,8 +344,8 @@ class tsGallery {
             // special: make directory
             $action = mediaBrowser::ACTION_MEDIA_MKDIR;
         }
-            
-        switch ($action):  
+
+        switch ($action):
         case self::ACTION_PICTURE_ADD:
         case self::ACTION_ALBUM_IMG_CHANGE:
         case self::ACTION_ALBUM_CREATE:
@@ -404,8 +403,8 @@ class tsGallery {
             $this->show(self::ACTION_GALLERY, $this->dlgGallery());
             break;
         endswitch;
-    } // action    
-    
+    } // action
+
     /**
      * Preformat the output, adds a navigation bar, prompts error a.s.o
      *
@@ -431,7 +430,7 @@ class tsGallery {
         );
         echo $this->getTemplate('backend.body.lte', $data);
     } // show()
-    
+
     /**
      * Information about tsGallery
      *
@@ -441,19 +440,19 @@ class tsGallery {
         $data = array(
                 'version'		=> sprintf('%01.2f', $this->getVersion()),
                 'img_url'		=> $this->img_url,
-                'release_notes'	=> file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/info.txt'),
+                'release_notes'	=> file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/CHANGELOG'),
         );
         return $this->getTemplate('backend.about.lte', $data);
     } // dlgAbout()
-    
+
     /**
      * General configuration dialog for tsGallery
-     * 
+     *
      * @return string parsed config dialog
      */
     public function dlgConfig() {
         global $dbTSGconfig;
-    
+
         $SQL = sprintf(	"SELECT * FROM %s WHERE NOT %s='%s' ORDER BY %s",
                 $dbTSGconfig->getTableName(),
                 dbTSGconfig::FIELD_STATUS,
@@ -470,7 +469,7 @@ class tsGallery {
                 'value'			=> tool_header_cfg_value,
                 'description'	=> tool_header_cfg_description
         );
-    
+
         $items = array();
         // list existing entries
         foreach ($config as $entry) {
@@ -507,7 +506,7 @@ class tsGallery {
         );
         return $this->getTemplate('backend.config.lte', $data);
     } // dlgConfig()
-    
+
     /**
      * checks all changes in the configuration and update the desired records
      * if necessary, sets messages and return the config dialog
@@ -556,10 +555,10 @@ class tsGallery {
         $this->setMessage($message);
         return $this->dlgConfig();
     } // checkConfig()
-    
+
     /**
      * Call a confirmation dialog before removing a complete directory
-     * 
+     *
      * @return string|boolean - confirm dialog or false on error
      */
     protected function confirmRemoveDirectory() {
@@ -569,10 +568,10 @@ class tsGallery {
         if (false === ($result = $mediaBrowser->confirmRemoveDirectory($remove_directory))) $this->setError($mediaBrowser->getError());
         return $result;
     } // confirmRemoveDirectory()
-    
+
     /**
      * Removes a directory
-     * 
+     *
      * @return string|boolen - mediaBrowser on success or false on error
      */
     protected function execRemoveDirectory() {
@@ -587,13 +586,13 @@ class tsGallery {
         }
         $this->setMessage(sprintf(TSG_MSG_RMDIR_SUCCESS, $remove_directory));
         $directory = substr($remove_directory, 0, strrpos($remove_directory, DIRECTORY_SEPARATOR));
-        if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError()); 
+        if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError());
         return $result;
     }
-    
+
     /**
      * Call a confirmation dialog before deleting a file
-     * 
+     *
      * @return string|boolean - confirm dialog or false on error
      */
     protected function confirmDeleteFile() {
@@ -603,10 +602,10 @@ class tsGallery {
         if (false === ($result = $mediaBrowser->confirmDeleteFile($delete_file))) $this->setError($mediaBrowser->getError());
         return $result;
     } // confirmDeleteFile()
-    
+
     /**
      * Delete a file and then show the media browser again
-     * 
+     *
      * @return string|boolean - media browser on success or false on error
      */
     protected function execDeleteFile() {
@@ -621,10 +620,10 @@ class tsGallery {
         if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError());
         return $result;
     } // execDeleteFile()
-    
+
     /**
      * Process a file upload to the server
-     * 
+     *
      * @return boolean|Ambigous <boolean, Ambigous, string, mixed>
      */
     protected function processFileUpload() {
@@ -639,10 +638,10 @@ class tsGallery {
         if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError());
         return $result;
     } // processFileUpload()
-    
+
     /**
      * Create a directory in /MEDIA folder
-     * 
+     *
      * @return string|boolean - mediaBrowser on success, false on error
      */
     protected function createDirectory() {
@@ -657,10 +656,10 @@ class tsGallery {
         if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError());
         return $result;
     } // createDirectory()
-    
+
     /**
      * Shows a Media Filemanager
-     * 
+     *
      * @return string mediaFilemanager
      */
     protected function dlgMediaDir() {
@@ -668,13 +667,13 @@ class tsGallery {
         $directory = isset($_REQUEST[mediaBrowser::REQUEST_DIRECTORY]) ? $_REQUEST[mediaBrowser::REQUEST_DIRECTORY] : '';
         // init mediaBrowser
         $mediaBrowser = new mediaBrowser();
-        if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError()); 
+        if (false === ($result = $mediaBrowser->dlgMediaDirectory($directory))) $this->setError($mediaBrowser->getError());
         return $result;
     } // dlgMediaDir()
-    
+
     /**
      * Select media files
-     * 
+     *
      * @return string|boolean - mediaFilemanager or false on error
      */
     protected function selectFiles() {
@@ -695,10 +694,10 @@ class tsGallery {
             return false;
         endswitch;
     } // selectFiles()
-    
+
     /**
      * Dialog for creating and editing the galleries
-     * 
+     *
      * @return string dlgGallery
      */
     protected function dlgGallery() {
@@ -706,9 +705,9 @@ class tsGallery {
         global $dbTSGalbum;
         global $dbTSGpicture;
         global $dbTSGconfig;
-        
+
         $gallery_id = isset($_REQUEST[dbTSGgallery::FIELD_ID]) ? $_REQUEST[dbTSGgallery::FIELD_ID] : -1;
-        
+
         if ($gallery_id > 0) {
             // load gallery
             $where = array(dbTSGgallery::FIELD_ID => $gallery_id);
@@ -737,7 +736,7 @@ class tsGallery {
             // set defaults for the album and the pictures
             $albums = array();
         }
-        
+
         $galleries = array();
         $where = array();
         if (!$dbTSGgallery->sqlSelectRecord($where, $galleries)) {
@@ -757,18 +756,18 @@ class tsGallery {
                     'selected' => ($gal[dbTSGgallery::FIELD_ID] == $gallery_id) ? 1 : 0
                     );
         }
-        
+
         $icon_width = $dbTSGconfig->getValue(dbTSGconfig::CFG_MB_IMG_ICON_WIDTH);
         $preview_width = $dbTSGconfig->getValue(dbTSGconfig::CFG_MB_IMG_PREVIEW_WIDTH);
         // init mediaBrowser - needed for image optimizing
         $mediaBrowser = new mediaBrowser();
-        
+
         $gallery_array = array(
                 'id' => array(
                         'name' => dbTSGgallery::FIELD_ID,
                         'value' => $gallery[dbTSGgallery::FIELD_ID],
                         'label' => constant(sprintf('TSG_LABEL_%s', strtoupper(dbTSGgallery::FIELD_ID))),
-                        'hint' => constant(sprintf('TSG_HINT_%s', strtoupper(dbTSGgallery::FIELD_ID)))                                
+                        'hint' => constant(sprintf('TSG_HINT_%s', strtoupper(dbTSGgallery::FIELD_ID)))
                         ),
                 'name' => array(
                         'name' => dbTSGgallery::FIELD_NAME,
@@ -804,9 +803,9 @@ class tsGallery {
                         'value' => $gallery_id,
                         'label' => TSG_LABEL_GALLERY_DELETE,
                         'hint' => TSG_HINT_GALLERY_DELETE
-                        )                
+                        )
                 );
-        
+
         $albums_array = array();
         // step throught the albums and load the pictures
         foreach ($albums as $album) {
@@ -831,11 +830,11 @@ class tsGallery {
                 else {
                     // file does not exist!
                 }
-                
+
                 $pictures_array[$picture[dbTSGpicture::FIELD_ID]] = array(
                         'id' => $picture[dbTSGpicture::FIELD_ID],
                         'album_id' => $picture[dbTSGpicture::FIELD_ALBUM_ID],
-                        'gallery_id' => $picture[dbTSGpicture::FIELD_GALLERY_ID], 
+                        'gallery_id' => $picture[dbTSGpicture::FIELD_GALLERY_ID],
                         'name' => sprintf('%s_%s', dbTSGpicture::FIELD_IMAGE_TITLE, $picture[dbTSGpicture::FIELD_ID]),
                         'title' => $picture[dbTSGpicture::FIELD_IMAGE_TITLE],
                         'image' => array(
@@ -857,20 +856,20 @@ class tsGallery {
                                 )
                         );
             }
-            
+
             if (file_exists(WB_PATH . mediaBrowser::MB_TEMP_DIR . '/icon' . substr($album[dbTSGalbum::FIELD_IMAGE_URL], strlen(WB_URL.MEDIA_DIRECTORY)))) {
                 $icon_url = WB_URL . mediaBrowser::MB_TEMP_DIR . '/icon' . substr($album[dbTSGalbum::FIELD_IMAGE_URL], strlen(WB_URL.MEDIA_DIRECTORY));
             }
             else {
-               // file does not exist! 
-            }            
+               // file does not exist!
+            }
             if (file_exists(WB_PATH . mediaBrowser::MB_TEMP_DIR . '/preview' . substr($album[dbTSGalbum::FIELD_IMAGE_URL], strlen(WB_URL.MEDIA_DIRECTORY)))) {
                 $preview_url = WB_URL . mediaBrowser::MB_TEMP_DIR . '/preview' . substr($album[dbTSGalbum::FIELD_IMAGE_URL], strlen(WB_URL.MEDIA_DIRECTORY));
             }
             else {
                 // file does not exist!
             }
-            
+
             $albums_array[$album[dbTSGalbum::FIELD_ID]] = array(
                     'id' => $album[dbTSGalbum::FIELD_ID],
                     'gallery_id' => $album[dbTSGalbum::FIELD_GALLERY_ID],
@@ -939,8 +938,8 @@ class tsGallery {
                             )
                     );
         } // foreach $albums
-        
-        
+
+
         $data = array(
                 'form' => array(
                         'name' => 'tsg_gallery',
@@ -976,24 +975,24 @@ class tsGallery {
                 );
         return $this->getTemplate('backend.gallery.lte', $data);
     } // dlgGallery()
-    
+
     /**
      * Check changes from dlgGallery
-     * 
+     *
      * @return string|boolean - dlgGallery on success or false on error
      */
     protected function checkGallery() {
         global $dbTSGgallery;
         global $dbTSGalbum;
         global $dbTSGpicture;
-        
+
         $gallery_id = isset($_REQUEST[dbTSGgallery::FIELD_ID]) ? $_REQUEST[dbTSGgallery::FIELD_ID] : -1;
-        
+
         $message = '';
         $data = array();
         $data[dbTSGgallery::FIELD_NAME] = isset($_REQUEST[dbTSGgallery::FIELD_NAME]) ? trim($_REQUEST[dbTSGgallery::FIELD_NAME]) : '';
         $data[dbTSGgallery::FIELD_DESCRIPTION] = isset($_REQUEST[dbTSGgallery::FIELD_DESCRIPTION]) ? trim($_REQUEST[dbTSGgallery::FIELD_DESCRIPTION]) : '';
-        
+
         $gallery = $dbTSGgallery->getFields();
         if ($gallery_id > 0) {
             // gallery is already existing
@@ -1013,8 +1012,8 @@ class tsGallery {
                 if (!$dbTSGpicture->sqlDeleteRecord($where)) {
                     $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbTSGpicture->getError()));
                     return false;
-                }    
-                // unset $_REQUEST, set message and return to the gallery dialog            
+                }
+                // unset $_REQUEST, set message and return to the gallery dialog
                 unset($_REQUEST[dbTSGgallery::FIELD_ID]);
                 $this->setMessage(sprintf(TSG_MSG_GALLERY_DELETED, $gallery_id));
                 return $this->dlgGallery();
@@ -1035,7 +1034,7 @@ class tsGallery {
             $this->setMessage(TSG_MSG_GALLERY_NAME_INVALID);
             return $this->dlgGallery();
         }
-        
+
         if ($data[dbTSGgallery::FIELD_NAME] != $gallery[dbTSGgallery::FIELD_NAME]) {
             // new record or record changed ...
             if ($gallery_id > 0) {
@@ -1060,7 +1059,7 @@ class tsGallery {
                 return $this->dlgGallery();
             }
         }
-                
+
         // ok gallery is saved, now look for the albums and pictures
         if (isset($_REQUEST[self::REQUEST_ALBUM_DELETE]) && !empty($_REQUEST[self::REQUEST_ALBUM_DELETE])) {
             // delete one or more albums
@@ -1080,7 +1079,7 @@ class tsGallery {
             }
             $message .= sprintf(TSG_MSG_ALBUM_DELETED, implode(', ',$ids));
         }
-                
+
         $where = array(dbTSGalbum::FIELD_GALLERY_ID => $gallery_id);
         $albums = array();
         if (!$dbTSGalbum->sqlSelectRecord($where, $albums)) {
@@ -1092,7 +1091,7 @@ class tsGallery {
             $img_title = (isset($_REQUEST[sprintf('%s_%s', dbTSGalbum::FIELD_IMAGE_TITLE, $album_id)]) ) ? $_REQUEST[sprintf('%s_%s', dbTSGalbum::FIELD_IMAGE_TITLE, $album_id)] : '';
             $title = (isset($_REQUEST[sprintf('%s_%s', dbTSGalbum::FIELD_ALBUM_TITLE, $album_id)])) ? $_REQUEST[sprintf('%s_%s', dbTSGalbum::FIELD_ALBUM_TITLE, $album_id)] : '';
             $desc = (isset($_REQUEST[sprintf('%s_%s', dbTSGalbum::FIELD_ALBUM_DESCRIPTION, $album_id)])) ? $_REQUEST[sprintf('%s_%s', dbTSGalbum::FIELD_ALBUM_DESCRIPTION, $album_id)] : '';
-            
+
             if (($img_title != $album[dbTSGalbum::FIELD_IMAGE_TITLE]) ||
                     ($title != $album[dbTSGalbum::FIELD_ALBUM_TITLE]) ||
                     ($desc != $album[dbTSGalbum::FIELD_ALBUM_DESCRIPTION])) {
@@ -1142,12 +1141,12 @@ class tsGallery {
                 }
             }
         }
-        
+
         $this->setMessage($message);
         return $this->dlgGallery();
     } // checkGallery()
-    
-    
+
+
     protected function selectAlbumPicture() {
         $action = isset($_REQUEST[self::REQUEST_ACTION]) ? $_REQUEST[self::REQUEST_ACTION] : self::ACTION_DEFAULT;
         switch ($action) :
@@ -1178,15 +1177,15 @@ class tsGallery {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, TSG_ERROR_UNDEFINED_ERROR));
             return false;
         endswitch;
-        
+
         $result = $this->dlgMediaDir();
         return $result;
     } // selectAlbumPicture()
-    
+
     protected function checkAlbumPicture() {
         global $dbTSGalbum;
         global $dbTSGpicture;
-        
+
         if (!isset($_REQUEST[mediaBrowser::REQUEST_FILE])) {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(TSG_ERROR_MISSING_PARAMS, 'REQUEST_FILE')));
             return false;
@@ -1206,7 +1205,7 @@ class tsGallery {
             if (!$dbTSGalbum->sqlInsertRecord($data)) {
                 $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbTSGalbum->getError()));
                 return false;
-            } 
+            }
             $this->setMessage(sprintf(TSG_MSG_ALBUM_CREATED, basename($file)));
         }
         elseif ($_REQUEST[self::REQUEST_NEXT_ACTION] == self::ACTION_ALBUM_CHECK) {
@@ -1236,6 +1235,6 @@ class tsGallery {
         }
         return $this->dlgGallery();
     } // checkAlbumPicture()
-    
+
 } // class tsGallery
 
