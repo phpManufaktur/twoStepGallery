@@ -1,0 +1,20 @@
+### twoStepGallery
+2011 - 2012 by phpManufaktur
+Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
+http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
+
+
+Release 0.11 - 2012-06-21
+
+* changed WebsiteBaker version check
+* changed license from GNU GPL to MIT license
+* added LICENSE
+* added CHANGELOG
+* removed info.txt
+* added README.md
+* updated all header informations
+* added ts_gallery.preset for autoloading Lytebox
+
+Release 0.10 - 2011-10-24
+
+* First Beta Release
