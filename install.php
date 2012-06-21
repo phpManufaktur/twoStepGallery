@@ -62,6 +62,7 @@ global $admin;
 
 $tables = array('dbTSGconfig', 'dbTSGgallery', 'dbTSGalbum', 'dbTSGpicture');
 $error = '';
+$message = '';
 
 foreach ($tables as $table) {
     $create = null;
